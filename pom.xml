@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>Cloudera</groupId>
+    <artifactId>TestSparkDFSIO</artifactId>
+    <version>1.0.0</version>
+
+    <properties>
+        <cdh.version>cdh5.7.5</cdh.version>
+        <spark.version>1.6.0-${cdh.version}</spark.version>
+        <!-- <scala.version>2.10.6</scala.version> -->
+        <scala.version>2.10.6</scala.version>
+        <scala.binary.version>2.10</scala.binary.version>
+
+        <!-- for scala 2.10.5, use scalatest version 2.2.5 ,  
+          for 2.10.4 use 2.2.4, for 2.10.6, use 2.2.6 -->
+        <!--   <scalatest.version>2.2.6</scalatest.version> -->
+		<scalatest.version>2.2.6</scalatest.version>
+
+        <!-- fasterxml is also tied to a specific version of scala
+           for 2.10.5, use 2.6.1, for 2.10.4 use 2.5.3 i
+           for 2.10.6, use 2.6.4-->
+        <fasterxml.version>2.6.4</fasterxml.version>
+
+
+        <junit.version>4.12</junit.version>
+        <avro.version>1.7.6-${cdh.version}</avro.version>
+        <hadoop.version>2.6.0</hadoop.version>
+        <top.dir>${project.basedir}/..</top.dir>
+    </properties>
+    <repositories>
+        <repository>
+            <id>cloudera-repo</id>
+            <name>Cloudera Repository</name>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+         <!-- Test -->
+    <dependency>
+      <groupId>org.scalatest</groupId>
+      <artifactId>scalatest_${scala.binary.version}</artifactId>
+      <version>${scalatest.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${fasterxml.version}</version>
+        </dependency>
+     <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${fasterxml.version}</version>
+        </dependency>
+    <dependency>
+	    <groupId>com.fasterxml.jackson.module</groupId>
+	    <artifactId>jackson-module-scala_${scala.binary.version}</artifactId>
+            <version>${fasterxml.version}</version>
+    </dependency>
+    <!--<dependency>
+    <groupId>org.apache.hadoop</groupId>
+    <artifactId>hadoop-minicluster</artifactId>
+    <version>${hadoop.version}-${cdh.version}</version>
+    <scope>provided</scope>
+</dependency>
+-->
+<!-- <dependency>
+    <groupId>org.apache.hadoop</groupId>
+    <artifactId>hadoop-hdfs</artifactId>
+    <version>${hadoop.version}-${cdh.version}</version>
+    <exclusions>
+    <exclusion>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>jsp-api</artifactId>
+    </exclusion>
+    <exclusion>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </exclusion>
+    </exclusions>
+</dependency>
+-->
+<dependency>
+    <groupId>org.apache.hadoop</groupId>
+    <artifactId>hadoop-hdfs</artifactId>
+    <version>${hadoop.version}-${cdh.version}</version>
+
+    <classifier>tests</classifier>
+
+    <exclusions> 
+
+    <exclusion>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>jsp-api</artifactId>
+    </exclusion>
+    <exclusion>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </exclusion>
+    </exclusions>
+</dependency>
+ <dependency>
+  <groupId>org.apache.avro</groupId>
+  <artifactId>avro</artifactId>
+  <version>${avro.version}</version>
+</dependency>
+<!--  remove avro tools as it conflicts with spark unit testing
+<dependency>
+  <groupId>org.apache.avro</groupId>
+  <artifactId>avro-tools</artifactId>
+  <version>${avro.version}</version>
+</dependency>
+ -->
+ 
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_${scala.binary.version}</artifactId>
+            <version>${spark.version}</version>
+            <!--<scope>provided</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-hive_${scala.binary.version}</artifactId>
+            <version>${spark.version}</version>
+            <!--<scope>provided</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.10</artifactId>
+            <version>${spark.version}</version>
+<!--
+    <exclusions>
+    <exclusion>
+      <groupId>org.eclipse.jetty.orbit</groupId>
+      <artifactId>javax.servlet</artifactId>
+    </exclusion>
+    </exclusions>
+-->
+
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-yarn_2.10</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+    <sourceDirectory>src/main/scala</sourceDirectory>
+    <testSourceDirectory>src/test/scala</testSourceDirectory>
+    
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.2.2</version>
+                <executions>
+                    <execution>
+                      <goals>
+                      <goal>compile</goal>
+                      <goal>testCompile</goal>
+                      </goals>
+                      <!--
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                        -->
+                    </execution>
+                    <!--
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                    -->
+                </executions>
+                <configuration>
+                    <charset>UTF-8</charset>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                    <recompileMode>incremental</recompileMode>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.scalatest</groupId>
+                <artifactId>scalatest-maven-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                    <junitxml>.</junitxml>
+                    <filereports>WDF TestSuite.txt</filereports>
+                    <parallel>false</parallel>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <skipTests>true</skipTests>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>integration-test</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <tagsToExclude>Integration-Test</tagsToExclude>
+                            <argLine>
+                                -Xmx1536m -XX:MaxPermSize=512m -XX:ReservedCodeCacheSize=512m
+                            </argLine>
+                            <parallel>false</parallel>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <shadedArtifactAttached>false</shadedArtifactAttached>
+                    <outputFile>target/SparkDSFIO_support.jar</outputFile>
+                    <artifactSet>
+                        <includes>
+                            <include>*:*</include>
+                        </includes>
+                        <excludes> 
+                        <exclude>junit:junit</exclude>
+                        <exclude>jmock:*</exclude>
+                       <!--   <exclude>hbase:hbase*</exclude> -->
+                        <exclude>org.apache.maven:*</exclude>
+                        <exclude>org.apache.spark:*</exclude>
+                        <exclude>org.mortbay.jetty:*</exclude>
+                        <exclude>org.apache.hadoop:*</exclude>
+                        <exclude>org.apache.hadoop:*</exclude>
+                        <exclude>org.apache.hive:*</exclude>
+                        <!--  <exclude>org.apache.hbase:*</exclude> -->
+                        <exclude>javax*:*</exclude>
+                        </excludes>
+                        
+                    </artifactSet>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                   <!-- <minimizeJar>true</minimizeJar> -->
+                   <!-- <minimizeJar>true</minimizeJar> -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>reference.conf</resource>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            
+        </plugins>
+
+    </build>
+
+
+</project>
